@@ -1,9 +1,25 @@
 package lexer
 
 import (
-	"log"
 	"monkeylang/token"
 )
+
+var keywords = map[string]token.TokenType{
+	"let":    token.LET,
+	"fn":     token.FUNCTION,
+	"true":   token.TRUE,
+	"false":  token.FALSE,
+	"if":     token.IF,
+	"else":   token.ELSE,
+	"return": token.RETURN,
+}
+
+func lookupIdent(ident string) token.TokenType {
+	if tok, ok := keywords[ident]; ok {
+		return tok
+	}
+	return token.IDENT
+}
 
 type Lexer struct {
 	input        string
@@ -67,22 +83,11 @@ func (l *Lexer) NextToken() token.Token {
 	default:
 		if isLetter(l.ch) {
 			tok.Value = l.readIdentifier()
-
-			if tok.Value == "let" {
-				tok.Type = token.LET
-			} else if tok.Value == "fn" {
-				tok.Type = token.FUNCTION
-			} else {
-				tok.Type = token.IDENT
-			}
-
+			tok.Type = lookupIdent(tok.Value)
 			return tok
 		} else if isDigit(l.ch) {
 			tok.Value = l.readNumber()
 			tok.Type = token.INT
-
-			log.Printf("found number %s", tok.Value)
-
 			return tok
 		} else {
 			tok = token.Token{Type: token.ILLEGAL, Value: string(l.ch)}
