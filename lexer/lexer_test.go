@@ -54,6 +54,11 @@ func TestNextTokenSourceCode(t *testing.T) {
 	} else {
 		return false;
 	}
+
+	10 == 10;
+	10 != 9;
+	10 >= 10;
+	10 <= 10;
 	`
 
 	tests := []struct {
@@ -103,15 +108,15 @@ func TestNextTokenSourceCode(t *testing.T) {
 		{token.INT, "5"},
 		{token.SEMICOLON, ";"},
 		{token.INT, "5"},
-		{token.LESS_THAN_OR_EQUAL, "<"},
+		{token.LESS, "<"},
 		{token.INT, "10"},
-		{token.GREATER_THAN_OR_EQUAL, ">"},
+		{token.GREATER, ">"},
 		{token.INT, "5"},
 		{token.SEMICOLON, ";"},
 		{token.IF, "if"},
 		{token.LPAREN, "("},
 		{token.INT, "5"},
-		{token.LESS_THAN_OR_EQUAL, "<"},
+		{token.LESS, "<"},
 		{token.INT, "10"},
 		{token.RPAREN, ")"},
 		{token.LBRACE, "{"},
@@ -125,6 +130,22 @@ func TestNextTokenSourceCode(t *testing.T) {
 		{token.FALSE, "false"},
 		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
+		{token.INT, "10"},
+		{token.EQUALS, "=="},
+		{token.INT, "10"},
+		{token.SEMICOLON, ";"},
+		{token.INT, "10"},
+		{token.NOT_EQUALS, "!="},
+		{token.INT, "9"},
+		{token.SEMICOLON, ";"},
+		{token.INT, "10"},
+		{token.GREATER_THAN_OR_EQUAL, ">="},
+		{token.INT, "10"},
+		{token.SEMICOLON, ";"},
+		{token.INT, "10"},
+		{token.LESS_THAN_OR_EQUAL, "<="},
+		{token.INT, "10"},
+		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
 	}
 

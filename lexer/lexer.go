@@ -34,6 +34,14 @@ func New(input string) *Lexer {
 	return lexer
 }
 
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
+}
+
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
@@ -51,7 +59,15 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.ch {
 	case '=':
-		tok = token.Token{Type: token.ASSIGN, Value: "="}
+		{
+			if l.peekChar() == '=' {
+				ch := l.ch
+				l.readChar()
+				tok = token.Token{Type: token.EQUALS, Value: string(ch) + string(l.ch)}
+			} else {
+				tok = token.Token{Type: token.ASSIGN, Value: "="}
+			}
+		}
 	case ';':
 		tok = token.Token{Type: token.SEMICOLON, Value: ";"}
 	case '(':
@@ -69,15 +85,37 @@ func (l *Lexer) NextToken() token.Token {
 	case '}':
 		tok = token.Token{Type: token.RBRACE, Value: "}"}
 	case '!':
-		tok = token.Token{Type: token.BANG, Value: "!"}
+		{
+			if l.peekChar() == '=' {
+				ch := l.ch
+				l.readChar()
+				tok = token.Token{Type: token.NOT_EQUALS, Value: string(ch) + string(l.ch)}
+			} else {
+				tok = token.Token{Type: token.BANG, Value: "!"}
+			}
+		}
 	case '*':
 		tok = token.Token{Type: token.ASTERISK, Value: "*"}
 	case '/':
 		tok = token.Token{Type: token.SLASH, Value: "/"}
 	case '<':
-		tok = token.Token{Type: token.LESS_THAN_OR_EQUAL, Value: "<"}
+		{
+			if l.peekChar() == '=' {
+				l.readChar()
+				tok = token.Token{Type: token.LESS_THAN_OR_EQUAL, Value: "<="}
+			} else {
+				tok = token.Token{Type: token.LESS, Value: "<"}
+			}
+		}
 	case '>':
-		tok = token.Token{Type: token.GREATER_THAN_OR_EQUAL, Value: ">"}
+		{
+			if l.peekChar() == '=' {
+				l.readChar()
+				tok = token.Token{Type: token.GREATER_THAN_OR_EQUAL, Value: ">="}
+			} else {
+				tok = token.Token{Type: token.GREATER, Value: ">"}
+			}
+		}
 	case 0:
 		tok = token.Token{Type: token.EOF, Value: ""}
 	default:

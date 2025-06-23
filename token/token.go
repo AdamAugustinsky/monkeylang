@@ -21,7 +21,7 @@ const (
 	SLASH                 = "/"
 	EQUALS                = "=="
 	BANG                  = "!"
-	NOT_EQUAL             = "!="
+	NOT_EQUALS            = "!="
 	GREATER               = ">"
 	LESS                  = "<"
 	GREATER_THAN_OR_EQUAL = ">="
