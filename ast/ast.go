@@ -66,3 +66,9 @@ func (i *Identifier) expressionNode() {
 func (i *Identifier) TokenLiteral() string {
 	return i.Token.Literal
 }
+
+// type ExpressionASTNode struct {
+// 	Left     ExpressionASTNode
+// 	Operator token.Token
+// 	Right    ExpressionASTNode
+// }

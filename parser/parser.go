@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"log"
 	"monkeylang/ast"
 	"monkeylang/lexer"
 	"monkeylang/token"
@@ -30,5 +31,82 @@ func (p *Parser) NextToken() {
 }
 
 func (p *Parser) ParseProgram() *ast.Program {
-	return nil
+	program := &ast.Program{Statements: []ast.Statement{}}
+
+	for p.curToken.Type != token.EOF {
+		stmt := p.ParseStatement()
+		if stmt != nil {
+			program.Statements = append(program.Statements, stmt)
+		}
+		p.NextToken()
+	}
+
+	return program
+}
+
+func (p *Parser) ParseStatement() ast.Statement {
+	log.Printf("curToken: %s, value: %s", p.curToken.Type, p.curToken.Literal)
+	switch p.curToken.Type {
+	case token.LET:
+		return p.ParseLetStatement()
+	default:
+		return nil
+	}
+}
+
+func (p *Parser) ParseLetStatement() *ast.LetStatement {
+	stmt := &ast.LetStatement{
+		Token: p.curToken,
+	}
+
+	if !p.expectPeek(token.IDENT) {
+		return nil
+	}
+
+	stmt.Name = p.ParseIdentifier()
+
+	if !p.expectPeek(token.ASSIGN) {
+		return nil
+	}
+
+	// skip expressisons for now
+	stmt.Value = p.ParseIdentifier()
+
+	for !p.curTokenIs(token.SEMICOLON) {
+		p.NextToken()
+	}
+	return stmt
+}
+
+func (p *Parser) ParseIdentifier() *ast.Identifier {
+	if !p.curTokenIs(token.IDENT) {
+		return nil
+	}
+	return &ast.Identifier{
+		Token: token.Token{Type: token.IDENT, Literal: p.curToken.Literal},
+		Value: p.curToken.Literal,
+	}
+}
+
+// func (p *Parser) ParseExpression() *ast.Expression {
+// 	switch p.curToken == token.INT {
+
+// 	}
+
+// }
+
+func (p *Parser) curTokenIs(t token.TokenType) bool {
+	return p.curToken.Type == t
+}
+
+func (p *Parser) peekTokenIs(t token.TokenType) bool {
+	return p.peekToken.Type == t
+}
+
+func (p *Parser) expectPeek(t token.TokenType) bool {
+	if p.peekTokenIs(t) {
+		p.NextToken()
+		return true
+	}
+	return false
 }
