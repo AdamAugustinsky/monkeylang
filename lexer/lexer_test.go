@@ -32,8 +32,8 @@ func TestNextToken(t *testing.T) {
 			t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
 		}
 
-		if tok.Value != tt.expectedValue {
-			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q", i, tt.expectedValue, tok.Value)
+		if tok.Literal != tt.expectedValue {
+			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q", i, tt.expectedValue, tok.Literal)
 		}
 	}
 }
@@ -158,8 +158,8 @@ func TestNextTokenSourceCode(t *testing.T) {
 			t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q", i, tt.expectedType, tok.Type)
 		}
 
-		if tok.Value != tt.expectedValue {
-			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q", i, tt.expectedValue, tok.Value)
+		if tok.Literal != tt.expectedValue {
+			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q", i, tt.expectedValue, tok.Literal)
 		}
 	}
 }

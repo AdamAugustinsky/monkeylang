@@ -63,72 +63,72 @@ func (l *Lexer) NextToken() token.Token {
 			if l.peekChar() == '=' {
 				ch := l.ch
 				l.readChar()
-				tok = token.Token{Type: token.EQUALS, Value: string(ch) + string(l.ch)}
+				tok = token.Token{Type: token.EQUALS, Literal: string(ch) + string(l.ch)}
 			} else {
-				tok = token.Token{Type: token.ASSIGN, Value: "="}
+				tok = token.Token{Type: token.ASSIGN, Literal: "="}
 			}
 		}
 	case ';':
-		tok = token.Token{Type: token.SEMICOLON, Value: ";"}
+		tok = token.Token{Type: token.SEMICOLON, Literal: ";"}
 	case '(':
-		tok = token.Token{Type: token.LPAREN, Value: "("}
+		tok = token.Token{Type: token.LPAREN, Literal: "("}
 	case ')':
-		tok = token.Token{Type: token.RPAREN, Value: ")"}
+		tok = token.Token{Type: token.RPAREN, Literal: ")"}
 	case ',':
-		tok = token.Token{Type: token.COMMA, Value: ","}
+		tok = token.Token{Type: token.COMMA, Literal: ","}
 	case '+':
-		tok = token.Token{Type: token.PLUS, Value: "+"}
+		tok = token.Token{Type: token.PLUS, Literal: "+"}
 	case '-':
-		tok = token.Token{Type: token.MINUS, Value: "-"}
+		tok = token.Token{Type: token.MINUS, Literal: "-"}
 	case '{':
-		tok = token.Token{Type: token.LBRACE, Value: "{"}
+		tok = token.Token{Type: token.LBRACE, Literal: "{"}
 	case '}':
-		tok = token.Token{Type: token.RBRACE, Value: "}"}
+		tok = token.Token{Type: token.RBRACE, Literal: "}"}
 	case '!':
 		{
 			if l.peekChar() == '=' {
 				ch := l.ch
 				l.readChar()
-				tok = token.Token{Type: token.NOT_EQUALS, Value: string(ch) + string(l.ch)}
+				tok = token.Token{Type: token.NOT_EQUALS, Literal: string(ch) + string(l.ch)}
 			} else {
-				tok = token.Token{Type: token.BANG, Value: "!"}
+				tok = token.Token{Type: token.BANG, Literal: "!"}
 			}
 		}
 	case '*':
-		tok = token.Token{Type: token.ASTERISK, Value: "*"}
+		tok = token.Token{Type: token.ASTERISK, Literal: "*"}
 	case '/':
-		tok = token.Token{Type: token.SLASH, Value: "/"}
+		tok = token.Token{Type: token.SLASH, Literal: "/"}
 	case '<':
 		{
 			if l.peekChar() == '=' {
 				l.readChar()
-				tok = token.Token{Type: token.LESS_THAN_OR_EQUAL, Value: "<="}
+				tok = token.Token{Type: token.LESS_THAN_OR_EQUAL, Literal: "<="}
 			} else {
-				tok = token.Token{Type: token.LESS, Value: "<"}
+				tok = token.Token{Type: token.LESS, Literal: "<"}
 			}
 		}
 	case '>':
 		{
 			if l.peekChar() == '=' {
 				l.readChar()
-				tok = token.Token{Type: token.GREATER_THAN_OR_EQUAL, Value: ">="}
+				tok = token.Token{Type: token.GREATER_THAN_OR_EQUAL, Literal: ">="}
 			} else {
-				tok = token.Token{Type: token.GREATER, Value: ">"}
+				tok = token.Token{Type: token.GREATER, Literal: ">"}
 			}
 		}
 	case 0:
-		tok = token.Token{Type: token.EOF, Value: ""}
+		tok = token.Token{Type: token.EOF, Literal: ""}
 	default:
 		if isLetter(l.ch) {
-			tok.Value = l.readIdentifier()
-			tok.Type = lookupIdent(tok.Value)
+			tok.Literal = l.readIdentifier()
+			tok.Type = lookupIdent(tok.Literal)
 			return tok
 		} else if isDigit(l.ch) {
-			tok.Value = l.readNumber()
+			tok.Literal = l.readNumber()
 			tok.Type = token.INT
 			return tok
 		} else {
-			tok = token.Token{Type: token.ILLEGAL, Value: string(l.ch)}
+			tok = token.Token{Type: token.ILLEGAL, Literal: string(l.ch)}
 		}
 	}
 
