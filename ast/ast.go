@@ -1,11 +1,13 @@
 package ast
 
 import (
+	"bytes"
 	"monkeylang/token"
 )
 
 type Node interface {
 	TokenLiteral() string
+	String() string
 }
 
 type Statement interface {
@@ -29,6 +31,16 @@ func (p *Program) TokenLiteral() string {
 	return ""
 }
 
+func (p *Program) String() string {
+	var out bytes.Buffer
+
+	for _, s := range p.Statements {
+		out.WriteString(s.String())
+	}
+
+	return out.String()
+}
+
 func NewProgramASTNode() *Program {
 	return &Program{Statements: []Statement{}}
 }
@@ -36,7 +48,7 @@ func NewProgramASTNode() *Program {
 type LetStatement struct {
 	Token token.Token
 	Name  *Identifier
-	Value Expression
+	Value *Identifier
 }
 
 func (ls *LetStatement) statementNode() {
@@ -45,6 +57,41 @@ func (ls *LetStatement) statementNode() {
 
 func (ls *LetStatement) TokenLiteral() string {
 	return ls.Token.Literal
+}
+
+func (ls *LetStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(ls.TokenLiteral() + " ")
+	out.WriteString(ls.Name.String())
+	out.WriteString(" = ")
+
+	if ls.Value != nil {
+		out.WriteString(ls.Value.String())
+	}
+
+	out.WriteString(";")
+	return out.String()
+}
+
+type ExpressionStatement struct {
+	Token token.Token
+	Value Expression
+}
+
+func (ls *ExpressionStatement) statementNode() {
+
+}
+
+func (ls *ExpressionStatement) TokenLiteral() string {
+	return ls.Token.Literal
+}
+
+func (es *ExpressionStatement) String() string {
+	if es.Value != nil {
+		return es.Value.String()
+	}
+	return ""
 }
 
 type ReturnStatement struct {
@@ -58,6 +105,19 @@ func (rs *ReturnStatement) statementNode() {
 
 func (rs *ReturnStatement) TokenLiteral() string {
 	return rs.Token.Literal
+}
+
+func (rs *ReturnStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(rs.TokenLiteral() + " ")
+
+	if rs.Value != nil {
+		out.WriteString(rs.Value.String())
+	}
+
+	out.WriteString(";")
+	return out.String()
 }
 
 func NewIdentifierASTNode() *Identifier {
@@ -80,8 +140,6 @@ func (i *Identifier) TokenLiteral() string {
 	return i.Token.Literal
 }
 
-// type ExpressionASTNode struct {
-// 	Left     ExpressionASTNode
-// 	Operator token.Token
-// 	Right    ExpressionASTNode
-// }
+func (i *Identifier) String() string {
+	return i.Value
+}
